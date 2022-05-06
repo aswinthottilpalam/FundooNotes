@@ -20,10 +20,22 @@ namespace BusinessLayer.Services
             {
                 this.userRL.AddUser(user);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw e;
+            }
+        }
+
+        public string LoginUser(string email, string password)
+        {
+            try
+            {
+                return this.userRL.LoginUser(email, password);
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
     }

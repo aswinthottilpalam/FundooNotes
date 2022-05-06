@@ -6,7 +6,7 @@ namespace CommonLayer.Users
 {
     public class UserPostModel
     {
-        public int UserId { get; set; }
+        public int userId { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string email { get; set; }
