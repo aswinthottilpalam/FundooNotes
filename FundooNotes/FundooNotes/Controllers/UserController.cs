@@ -3,6 +3,7 @@ using CommonLayer.Users;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer.FundooContext;
 using System;
+using System.Linq;
 
 namespace FundooNotes.Controllers
 {
@@ -28,8 +29,7 @@ namespace FundooNotes.Controllers
                 return this.Ok(new {sucess = true, message = $"User data added successfully" });
             }
             catch (Exception e)
-            {
-
+            {  
                 throw e;
             }
         }
@@ -39,6 +39,7 @@ namespace FundooNotes.Controllers
         {
             try
             {
+                var userdata = fundoosContext.User.FirstOrDefault(u => u.Email == email && u.Password == password);
                 string token = this.userBL.LoginUser(email, password);
                 if(token == null)
                 {
@@ -49,6 +50,25 @@ namespace FundooNotes.Controllers
             catch (Exception e)
             {
                 return this.BadRequest(new { success = false, message = $"Login Failed {e.Message}" });
+            }
+        }
+
+        [HttpPost("ForgotPassword")]
+        public ActionResult ForgotPassword(string email)
+        {
+            try
+            {
+                var result = this.userBL.ForgotPassword(email);
+                if (result != false)
+                {
+                    return this.Ok(new{ success = true, message = $"Mail Sent Successfully " + $" token:  {result}" });
+                }
+                return this.BadRequest(new { success = false, message = $"mail not sent" });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
             }
         }
     }
