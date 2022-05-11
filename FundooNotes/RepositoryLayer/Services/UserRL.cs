@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RepositoryLayer.Entities;
 using RepositoryLayer.FundooContext;
-using RepositoryLayer.Migrations;
+//using RepositoryLayer.Migrations;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Experimental.System.Messaging;
-
+using CommonLayer;
 
 namespace RepositoryLayer.Services
 {
@@ -35,7 +35,7 @@ namespace RepositoryLayer.Services
                 userdata.FirstName = user.firstName;
                 userdata.LastName = user.lastName;
                 userdata.Email = user.email;
-                userdata.Password = user.password;
+                userdata.Password = EncryptPassword(user.password);
                 fundoosContext.Add(userdata);
                 fundoosContext.SaveChanges();
             }
@@ -44,6 +44,29 @@ namespace RepositoryLayer.Services
                 throw;
             }
         }
+
+        // Encrypt Password
+        private string EncryptPassword(string password)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(password))
+                {
+                    return null;
+                }
+                else
+                {
+                    byte[] b = Encoding.ASCII.GetBytes(password);
+                    string encrypted = Convert.ToBase64String(b);
+                    return encrypted;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
         // Login with the username and password
         public string LoginUser(string email, string password)
@@ -74,7 +97,7 @@ namespace RepositoryLayer.Services
                     new Claim("email", email),
                     new Claim("userID",UserId.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddMinutes(15),
 
                 SigningCredentials =
                 new SigningCredentials(
@@ -177,6 +200,28 @@ namespace RepositoryLayer.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+
+
+        public bool ChangePassword(string email, ChangePasswordModel valid)
+        {
+            try
+            {
+                if (valid.Password.Equals(valid.confirmPassword))
+                {
+                    var user = fundoosContext.User.Where(u => u.Email == email).FirstOrDefault();
+                    user.Password = EncryptPassword(valid.confirmPassword);
+                    fundoosContext.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
     }
 }

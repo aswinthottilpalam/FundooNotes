@@ -1,4 +1,5 @@
-﻿using CommonLayer.Users;
+﻿using CommonLayer;
+using CommonLayer.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,5 +13,7 @@ namespace BusinessLayer.Interfaces
         public string LoginUser(string email, string password);
 
         public bool ForgotPassword(string email);
+        public bool ChangePassword(string email, ChangePasswordModel valid);
+
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RepositoryLayer.Entities;
 using RepositoryLayer.FundooContext;
+using RepositoryLayer.Interfaces;
 using RepositoryLayer.Services;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,10 @@ namespace FundooNotes
             services.AddDbContext<FundoosContext>(opts => opts.UseSqlServer(Configuration["ConnectionStrings:FundooNotes"]));
             services.AddTransient<IUserBL, UserBL>();
             services.AddTransient<IUserRL, UserRL>();
+
+            services.AddTransient<INoteBL, NoteBL>();
+            services.AddTransient<INoteRL, NoteRL>();
+
             services.AddSwaggerGen(setup =>
             {
                 // Include security scheme to use JWT Authentication
@@ -86,6 +91,16 @@ namespace FundooNotes
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.)
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FundooNotes");
+            });
+
+            app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -100,22 +115,7 @@ namespace FundooNotes
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.)
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FundooNotes");
-            });
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            app.UseAuthentication();
+            });   
         }
     }
 }
