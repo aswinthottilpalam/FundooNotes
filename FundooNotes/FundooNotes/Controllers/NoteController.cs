@@ -92,5 +92,30 @@ namespace FundooNotes.Controllers
             }
         }
 
+        // Archive Note
+
+        [Authorize]
+        [HttpPut("ArchiveNote")]
+        public async Task<ActionResult> ArchiveNote(int userId, int noteId) 
+        {
+            try
+            {
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userID", StringComparison.InvariantCultureIgnoreCase));
+                int UserId = Int32.Parse(userid.Value);
+                var note = fundoosContext.Notes.FirstOrDefault(e => e.UserId == UserId && e.NoteId == noteId);
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, message = "Sorry! Failed to Archive Note" });  
+                }
+                await this.noteBL.ArchiveNote(UserId, noteId);
+                return this.Ok(new { success = true, message = "Note Archived Successfully" });
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }

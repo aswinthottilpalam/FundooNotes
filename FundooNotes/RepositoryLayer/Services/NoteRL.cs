@@ -88,6 +88,7 @@ namespace RepositoryLayer.Services
             }
         }
 
+        // Archive Notes
         public async Task ArchiveNote(int userId, int noteId)
         {
             try
@@ -100,10 +101,11 @@ namespace RepositoryLayer.Services
                     {
                         note.IsArchieve = false;
                     }
-                    if(note.IsArchieve == false)
+                    else
                     {
                         note.IsArchieve = true;
                     }
+                       
                 }
 
                 await fundoosContext.SaveChangesAsync();
