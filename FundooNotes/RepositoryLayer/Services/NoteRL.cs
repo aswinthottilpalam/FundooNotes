@@ -22,6 +22,8 @@ namespace RepositoryLayer.Services
             this.fundoosContext = fundoosContext;
             this.Configuration = configuration;
         }
+
+        // Add notes
         public async Task AddNote(int userId, NotePostModel notePostModel)
         {
             try
@@ -66,6 +68,7 @@ namespace RepositoryLayer.Services
             }
         }
 
+        // Change Color
         public async Task ChangeColor(int userId, int noteId, string color)
         {
             try

@@ -41,6 +41,7 @@ namespace BusinessLayer.Services
             }
         }
 
+        // Change Color
         public async Task ChangeColor(int userId, int noteId, string color)
         {
             try
