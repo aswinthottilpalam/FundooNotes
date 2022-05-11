@@ -42,27 +42,29 @@ namespace FundooNotes.Controllers
             }
         }
 
-        //[Authorize]
-        //[HttpDelete]
-        //public ActionResult DeleteNote(int noteId)
-        //{
-        //    try
-        //    {
-        //        if (noteBL.DeleteNote(noteId))
-        //        {
-        //            return this.Ok(new { success = true, message = "Note Deleted Successfully" });
-        //        }
-        //        return this.BadRequest(new { success = true, message = "Note Deletion Failed" });
-        //    }
-        //    catch (Exception e)
-        //    {
+        //Delete Note
 
-        //        throw e;
-        //    }
-        //}
+        [Authorize]
+        [HttpDelete]
+        public ActionResult DeleteNote(int noteId)
+        {
+            try
+            {
+                if (noteBL.DeleteNote(noteId))
+                {
+                    return this.Ok(new { success = true, message = "Note Deleted Successfully" });
+                }
+                return this.BadRequest(new { success = true, message = "Note Deletion Failed" });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
 
 
-       
+
         // Change Color
 
         [Authorize]
