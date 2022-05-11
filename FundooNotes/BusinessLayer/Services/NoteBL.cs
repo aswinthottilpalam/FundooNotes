@@ -28,6 +28,7 @@ namespace BusinessLayer.Services
             }
         }
 
+        // Archive Notes
         public async Task ArchiveNote(int userId, int noteId)
         {
             try
