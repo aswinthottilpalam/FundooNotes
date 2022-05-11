@@ -1,9 +1,12 @@
 ﻿using BusinessLayer.Interfaces;
+using CommonLayer;
 using CommonLayer.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer.FundooContext;
 using System;
 using System.Linq;
+using System.Security.Claims;
 
 namespace FundooNotes.Controllers
 {
@@ -34,7 +37,7 @@ namespace FundooNotes.Controllers
             }
         }
 
-        [HttpPost("LoginUser")]
+        [HttpPost("Login/{email}/{password}")]
         public ActionResult LoginUser(string email,  string password)
         {
             try
@@ -53,7 +56,7 @@ namespace FundooNotes.Controllers
             }
         }
 
-        [HttpPost("ForgotPassword")]
+        [HttpPost("ForgetPassword/{email}")]
         public ActionResult ForgotPassword(string email)
         {
             try
@@ -71,5 +74,33 @@ namespace FundooNotes.Controllers
                 throw e;
             }
         }
+
+
+
+        [Authorize]
+        [HttpPut("ChangePassword")]
+        public ActionResult ChangePassword(ChangePasswordModel valid)
+        {
+            try
+            {
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userId", StringComparison.InvariantCultureIgnoreCase));
+                int userId = Int32.Parse(userid.Value);
+                var result = fundoosContext.User.Where(u => u.UserId == userId).FirstOrDefault();
+                string email = result.Email.ToString();
+                bool res = userBL.ChangePassword(email, valid);
+
+                if(res == false)
+                {
+                    return this.BadRequest(new { success = false, message = $"Enter valid Password" });
+                }
+                return this.Ok(new { success = true, message = $"Change Password Successfull" });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
     }
 }
