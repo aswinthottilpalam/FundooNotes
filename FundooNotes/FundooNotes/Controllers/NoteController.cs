@@ -1,4 +1,5 @@
-﻿using CommonLayer;
+﻿using BusinessLayer.Interfaces;
+using CommonLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer.FundooContext;
@@ -12,11 +13,11 @@ namespace FundooNotes.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class NoteController : Controller
+    public class NoteController : ControllerBase
     {
         FundoosContext fundoosContext;
-        INoteRL noteBL;
-        public NoteController(NoteRL noteBL, FundoosContext fundooContext)
+        INoteBL noteBL;
+        public NoteController(INoteBL noteBL, FundoosContext fundooContext)
         {
             this.noteBL = noteBL;
             this.fundoosContext = fundooContext;
