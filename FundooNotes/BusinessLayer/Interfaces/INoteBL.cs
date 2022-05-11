@@ -11,7 +11,7 @@ namespace BusinessLayer.Interfaces
     {
         Task AddNote(int userId, NotePostModel notePostModel);
 
-        //bool DeleteNote(int noteId);
+        bool DeleteNote(int noteId);
 
         Task ChangeColor(int userId, int noteId, string color);
 

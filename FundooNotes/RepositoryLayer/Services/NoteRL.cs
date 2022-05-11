@@ -53,6 +53,8 @@ namespace RepositoryLayer.Services
             }
         }
 
+
+        // Delete note
         public bool DeleteNote(int noteId)
         {
             Note note = fundoosContext.Notes.FirstOrDefault(e => e.NoteId == noteId);

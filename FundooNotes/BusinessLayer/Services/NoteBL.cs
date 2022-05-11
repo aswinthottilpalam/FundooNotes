@@ -55,19 +55,20 @@ namespace BusinessLayer.Services
             }
         }
 
-        //public bool DeleteNote(int noteId)
-        //{
-        //    try
-        //    {
-        //        if (noteRL.DeleteNote(noteId))
-        //            return true;
-        //        else
-        //            return false;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
+        // Delete note
+        public bool DeleteNote(int noteId)
+        {
+            try
+            {
+                if (noteRL.DeleteNote(noteId))
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
