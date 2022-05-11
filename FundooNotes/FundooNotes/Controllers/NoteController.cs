@@ -61,6 +61,10 @@ namespace FundooNotes.Controllers
         //    }
         //}
 
+
+       
+        // Change Color
+
         [Authorize]
         [HttpPut("ChangeColor/{noteId}/{color}")]
         public async Task<ActionResult>ChangeColor(int noteId, string color)
