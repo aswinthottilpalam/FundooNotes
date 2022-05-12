@@ -41,7 +41,7 @@ namespace RepositoryLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Label");
+                    b.ToTable("Labels");
                 });
 
             modelBuilder.Entity("RepositoryLayer.Entities.Note", b =>
@@ -121,17 +121,17 @@ namespace RepositoryLayer.Migrations
 
             modelBuilder.Entity("RepositoryLayer.Entities.Label", b =>
                 {
-                    b.HasOne("RepositoryLayer.Entities.Note", "note")
+                    b.HasOne("RepositoryLayer.Entities.Note", "Note")
                         .WithMany("Label")
                         .HasForeignKey("NoteId");
 
-                    b.HasOne("RepositoryLayer.Entities.User", "user")
+                    b.HasOne("RepositoryLayer.Entities.User", "User")
                         .WithMany("Label")
                         .HasForeignKey("UserId");
 
-                    b.Navigation("note");
+                    b.Navigation("Note");
 
-                    b.Navigation("user");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RepositoryLayer.Entities.Note", b =>

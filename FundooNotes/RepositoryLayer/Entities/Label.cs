@@ -13,8 +13,8 @@ namespace RepositoryLayer.Entities
         public int LabelId { get; set; }
         public string LabelName { get; set; }
         public int? UserId { get; set; }
-        public virtual User user { get; set; }  
+        public virtual User User { get; set; }  
         public int? NoteId { get; set; }
-        public virtual Note note { get; set; }
+        public virtual Note Note { get; set; }
     }
 }

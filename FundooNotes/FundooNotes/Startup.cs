@@ -44,6 +44,9 @@ namespace FundooNotes
             services.AddTransient<INoteBL, NoteBL>();
             services.AddTransient<INoteRL, NoteRL>();
 
+            services.AddTransient<ILabelBL, LabelBL>();
+            services.AddTransient<ILabelRL, LabelRL>();
+
             services.AddSwaggerGen(setup =>
             {
                 // Include security scheme to use JWT Authentication
