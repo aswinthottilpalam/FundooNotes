@@ -89,11 +89,11 @@ namespace RepositoryLayer.Services
         }
 
         // Archive Notes
-        public async Task ArchiveNote(int userId, int noteId)
+        public async Task ArchiveNote(int noteId)
         {
             try
             {
-                var note = fundoosContext.Notes.FirstOrDefault(e => e.UserId == userId && e.NoteId == noteId);
+                var note = fundoosContext.Notes.FirstOrDefault(e => e.NoteId == noteId);
 
                 if( note != null)
                 {
@@ -116,6 +116,7 @@ namespace RepositoryLayer.Services
             }
         }
 
+        // Update Note
         public async Task<Note> UpdateNote(int noteId, NoteUpdateModel noteUpdateModel)
         {
             try
@@ -150,7 +151,101 @@ namespace RepositoryLayer.Services
         {
             try
             {
-                return await fundoosContext.Notes.Where(u => u.NoteId == noteId && u.UserId == u.UserId).Include(u => u.user).FirstOrDefaultAsync();
+                return await fundoosContext.Notes.Where(u => u.NoteId == noteId).Include(u => u.user).FirstOrDefaultAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        // Pin Note
+        public async Task<Note> PinNote( int noteId)
+        {
+            try
+            {
+                var note = fundoosContext.Notes.FirstOrDefault(e => e.NoteId == noteId);
+
+                if (note != null)
+                {
+                    if (note.IsPin == true)
+                    {
+                        note.IsPin = false;
+                    }
+                    else
+                    {
+                        note.IsPin = true;
+                    }
+
+                }
+                await fundoosContext.SaveChangesAsync();
+                return await fundoosContext.Notes.Where(a => a.NoteId == noteId).FirstOrDefaultAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        // Trash Note
+        public async Task<Note> TrashNote(int noteId, int userId)
+        {
+            try
+            {
+                var note = fundoosContext.Notes.FirstOrDefault(u => u.NoteId == noteId && u.UserId == userId);
+                if (note != null)
+                {
+                    if (note.IsTrash == false)
+                    {
+                        note.IsTrash = true;
+                    }
+                    else
+                    {
+                        note.IsTrash = false;
+                    }
+                    await fundoosContext.SaveChangesAsync();
+                    return await fundoosContext.Notes.Where(a => a.NoteId == noteId).FirstOrDefaultAsync();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        // Get all Notes
+        public async Task<List<Note>> GetAllNote(int userId)
+        {
+            try
+            {
+                return await fundoosContext.Notes.Where(u => u.UserId == userId).Include(u => u.user).ToListAsync();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        // Remainder Date
+        public async Task Remainder(int userId, int noteId, DateTime RemainderDate)
+        {
+            try
+            {
+                var note = fundoosContext.Notes.FirstOrDefault(u => u.NoteId == noteId && u.UserId == userId);
+                if (note != null)
+                {
+                    if(note.IsRemainder == true)
+                    {
+                        note.RemainderDate = RemainderDate;
+                    }
+                }
+                await fundoosContext.SaveChangesAsync();
             }
             catch (Exception e)
             {

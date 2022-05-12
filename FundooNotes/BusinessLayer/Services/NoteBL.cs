@@ -30,11 +30,11 @@ namespace BusinessLayer.Services
         }
 
         // Archive Notes
-        public async Task ArchiveNote(int userId, int noteId)
+        public async Task ArchiveNote(int noteId)
         {
             try
             {
-                await this.noteRL.ArchiveNote(userId, noteId);
+                await this.noteRL.ArchiveNote(noteId);
             }
             catch (Exception)
             {
@@ -73,12 +73,41 @@ namespace BusinessLayer.Services
             }
         }
 
+
         // Get Notes
         public async Task<Note> GetNote(int noteId)
         {
             try
             {
                 return await this.noteRL.GetNote(noteId);
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        // Pin note
+        public async Task<Note> PinNote(int noteId)
+        {
+            try
+            {
+               return await this.noteRL.PinNote(noteId);
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        // Trash Note
+        public async Task<Note> TrashNote(int noteId, int userId)
+        {
+            try
+            {
+                return await this.noteRL.TrashNote(noteId, userId);
             }
             catch (Exception e)
             {
@@ -97,6 +126,34 @@ namespace BusinessLayer.Services
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+
+        // Get all notes
+        public async Task<List<Note>> GetAllNote(int userId)
+        {
+            try
+            {
+                return await this.noteRL.GetAllNote(userId);
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        // Remainder note
+        public async Task Remainder(int userId, int noteId, DateTime RemainderDate)
+        {
+            try
+            {
+                await this.noteRL.Remainder(userId, noteId, RemainderDate);
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
     }

@@ -7,6 +7,7 @@ using RepositoryLayer.FundooContext;
 using RepositoryLayer.Interfaces;
 using RepositoryLayer.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -98,8 +99,8 @@ namespace FundooNotes.Controllers
         // Archive Note
 
         [Authorize]
-        [HttpPut("ArchiveNote")]
-        public async Task<ActionResult> ArchiveNote(int userId, int noteId) 
+        [HttpPut("ArchiveNote/{noteId}")]
+        public async Task<ActionResult> ArchiveNote(int noteId) 
         {
             try
             {
@@ -110,7 +111,7 @@ namespace FundooNotes.Controllers
                 {
                     return this.BadRequest(new { success = false, message = "Sorry! Failed to Archive Note" });  
                 }
-                await this.noteBL.ArchiveNote(UserId, noteId);
+                await this.noteBL.ArchiveNote(noteId);
                 return this.Ok(new { success = true, message = "Note Archived Successfully" });
 
             }
@@ -122,7 +123,7 @@ namespace FundooNotes.Controllers
 
         // Update note
         [Authorize]
-        [HttpPut("UpdateNote/{NoteId}")]
+        [HttpPut("UpdateNote/{noteId}")]
         public async Task<ActionResult<Note>> UpdateNote(int noteId, NoteUpdateModel noteUpdateModel)
         {
           try
@@ -148,7 +149,32 @@ namespace FundooNotes.Controllers
         // Get Note
         [Authorize]
         [HttpGet(("GetNote/{noteId}"))]
-        public async Task<ActionResult<Note>> GetNote(int noteId)
+        public async Task<ActionResult> GetNote(int noteId)
+        {
+            try
+            {
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userID", StringComparison.InvariantCultureIgnoreCase));
+                int userId = Int32.Parse(userid.Value);
+                var note = fundoosContext.Notes.FirstOrDefault(e => e.UserId == userId && e.NoteId == noteId);
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, message = "Sorry! Get Note Failed" });
+                }
+                var res = await this.noteBL.GetNote(noteId);
+                //await this.noteBL.GetNote(noteId);
+
+                return this.Ok(new { success = true, message = "Get note Success", data = res });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        // Pin note 
+        [Authorize]
+        [HttpPut("PinNote/{noteId}")]
+        public async Task<ActionResult<Note>> PinNote(int noteId)
         {
             try
             {
@@ -157,17 +183,85 @@ namespace FundooNotes.Controllers
                 var note = fundoosContext.Notes.FirstOrDefault(e => e.UserId == UserId && e.NoteId == noteId);
                 if (note == null)
                 {
-                    return this.BadRequest(new { success = false, message = "Sorry! Get Note Failed" });
+                    return this.BadRequest(new { success = false, message = "Sorry! Failed to Pin Note" });
                 }
-                await this.noteBL.GetNote(noteId);
+                await this.noteBL.PinNote(noteId);
+                return this.Ok(new { success = true, message = "Note Pinned Successfully" });
 
-                return this.Ok(new { success = true, message = "Get note Success" });
             }
             catch (Exception e)
             {
                 throw e;
             }
         }
+
+        // Trash Note
+        [Authorize]
+        [HttpPut("TrashNote/{noteId}")]
+        public async Task<ActionResult> TrashNote(int noteId)
+        {
+            try
+            {
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userID", StringComparison.InvariantCultureIgnoreCase));
+                int UserId = Int32.Parse(userid.Value);
+                var note = fundoosContext.Notes.Where(x => x.UserId == UserId && x.NoteId == noteId).FirstOrDefault();
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, message = "Sorry! Note does not exist" });
+                }
+                await this.noteBL.TrashNote(noteId, UserId);
+                return this.Ok(new { success = true, message = "Note Trashed Successfully" });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        // Remainder Notes
+        [Authorize]
+        [HttpPut("Remainder/{noteId}/{RemainderDate}")]
+        public async Task<ActionResult> Remainder(int noteId, DateTime RemainderDate)
+        {
+            try
+            {
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userID", StringComparison.InvariantCultureIgnoreCase));
+                int userId = Int32.Parse(userid.Value);
+                var note = fundoosContext.Notes.Where(x => x.UserId == userId && x.NoteId == noteId).FirstOrDefault();
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, message = "Sorry! Note does not exist" });
+                }
+
+                await this.noteBL.Remainder(userId, noteId, RemainderDate);
+                return this.Ok(new { success = true, message = $"Remainder added Successfully" });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        // Get all Notes
+        [Authorize]
+        [HttpGet("GetAllNotes")]
+        public async Task<ActionResult> GetAllNote()
+        {
+            try
+            {
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userID", StringComparison.InvariantCultureIgnoreCase));
+                int userId = Int32.Parse(userid.Value);
+                List<Note> result = new List<Note>();
+                result = await this.noteBL.GetAllNote(userId); 
+                return this.Ok(new { success = true, message = $"Notes generated Successfully", data = result});
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
 
     }
 }
