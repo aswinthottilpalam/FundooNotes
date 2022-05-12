@@ -16,7 +16,10 @@ namespace RepositoryLayer.Interfaces
 
         Task ArchiveNote(int userId, int noteId);
 
-        Task<Note> UpdateNote(int userId, int noteId, NoteUpdateModel noteUpdateModel);
+        Task<Note> UpdateNote(int noteId, NoteUpdateModel noteUpdateModel);
+
+        Task<Note> GetNote(int noteId);
+
 
     }
 }

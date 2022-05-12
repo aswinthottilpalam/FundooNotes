@@ -2,6 +2,7 @@
 using CommonLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RepositoryLayer.Entities;
 using RepositoryLayer.FundooContext;
 using RepositoryLayer.Interfaces;
 using RepositoryLayer.Services;
@@ -23,6 +24,8 @@ namespace FundooNotes.Controllers
             this.fundoosContext = fundooContext;
         }
 
+
+        // Add Note
 
         [Authorize]
         [HttpPost]
@@ -110,6 +113,55 @@ namespace FundooNotes.Controllers
                 await this.noteBL.ArchiveNote(UserId, noteId);
                 return this.Ok(new { success = true, message = "Note Archived Successfully" });
 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        // Update note
+        [Authorize]
+        [HttpPut("UpdateNote/{NoteId}")]
+        public async Task<ActionResult<Note>> UpdateNote(int noteId, NoteUpdateModel noteUpdateModel)
+        {
+          try
+            {
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userID", StringComparison.InvariantCultureIgnoreCase));
+                int UserId = Int32.Parse(userid.Value);
+                //var note = noteBL.UpdateNote(userId, noteId, noteUpdateModel);
+                var note = fundoosContext.Notes.FirstOrDefault(e => e.UserId == UserId && e.NoteId == noteId);
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, message = "Sorry! Update notes Failed" });  
+                }
+                await this.noteBL.UpdateNote(noteId, noteUpdateModel);
+                return this.Ok(new { success = true, message = "Note Updated Successfully" });
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        // Get Note
+        [Authorize]
+        [HttpGet(("GetNote/{noteId}"))]
+        public async Task<ActionResult<Note>> GetNote(int noteId)
+        {
+            try
+            {
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userID", StringComparison.InvariantCultureIgnoreCase));
+                int UserId = Int32.Parse(userid.Value);
+                var note = fundoosContext.Notes.FirstOrDefault(e => e.UserId == UserId && e.NoteId == noteId);
+                if (note == null)
+                {
+                    return this.BadRequest(new { success = false, message = "Sorry! Get Note Failed" });
+                }
+                await this.noteBL.GetNote(noteId);
+
+                return this.Ok(new { success = true, message = "Get note Success" });
             }
             catch (Exception e)
             {

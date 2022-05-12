@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Interfaces;
 using CommonLayer;
+using RepositoryLayer.Entities;
 using RepositoryLayer.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,33 @@ namespace BusinessLayer.Services
                     return true;
                 else
                     return false;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        // Get Notes
+        public async Task<Note> GetNote(int noteId)
+        {
+            try
+            {
+                return await this.noteRL.GetNote(noteId);
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        // Update notes
+        public async Task<Note> UpdateNote(int noteId, NoteUpdateModel noteUpdateModel)
+        {
+            try
+            {
+                return await this.noteRL.UpdateNote(noteId, noteUpdateModel);
             }
             catch (Exception e)
             {
