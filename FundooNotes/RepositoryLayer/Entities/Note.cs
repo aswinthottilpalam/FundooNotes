@@ -27,5 +27,7 @@ namespace RepositoryLayer.Entities
         public virtual User user { get; set; }
         // User is entity class name in db set
 
+        public virtual IList<Label> Label { get; set; }
+
     }
 }

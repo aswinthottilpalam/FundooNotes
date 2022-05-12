@@ -116,13 +116,12 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public async Task<Note> UpdateNote(int userId, int noteId, NoteUpdateModel noteUpdateModel)
+        public async Task<Note> UpdateNote(int noteId, NoteUpdateModel noteUpdateModel)
         {
             try
             {
-                var note = fundoosContext.Notes.FirstOrDefault(e => e.UserId == userId && e.NoteId == noteId);
-
-                if(note != null)
+                var note = fundoosContext.Notes.FirstOrDefault(e => e.NoteId == noteId);
+                if (note != null)
                 {
                     note.Title = noteUpdateModel.Title;
                     note.Description = noteUpdateModel.Description;
@@ -140,9 +139,23 @@ namespace RepositoryLayer.Services
                 .Include(u => u.user)
                 .FirstOrDefaultAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
+            }
+        }
+
+        // Get Notes
+        public async Task<Note> GetNote(int noteId)
+        {
+            try
+            {
+                return await fundoosContext.Notes.Where(u => u.NoteId == noteId && u.UserId == u.UserId).Include(u => u.user).FirstOrDefaultAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
             }
         }
     }
