@@ -224,7 +224,7 @@ namespace RepositoryLayer.Services
         {
             try
             {
-                return await fundoosContext.Notes.Where(u => u.UserId == userId).Include(u => u.user).ToListAsync();
+                return await fundoosContext.Notes.Where(u => u.UserId == userId).Include(u => u.user).Include(l => l.Label).ToListAsync();
             }
             catch (Exception e)
             {
