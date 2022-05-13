@@ -42,5 +42,21 @@ namespace RepositoryLayer.Services
                 throw e;
             }
         }
+
+        // Delete Label
+        public async Task DeleteLabel(int LabelId, int userId)
+        {
+            try
+            {
+                var result = fundoosContext.Label.FirstOrDefault(u => u.LabelId == LabelId && u.UserId == userId);
+                fundoosContext.Label.Remove(result);
+                await fundoosContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
     }
 }
