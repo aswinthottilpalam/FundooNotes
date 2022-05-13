@@ -14,6 +14,8 @@ namespace BusinessLayer.Services
         {
             this.LabelRL = ilabelRL;
         }
+
+        // Add Label
         public async Task Addlabel(int userId, int Noteid, string LabelName)
         {
             try
@@ -24,6 +26,19 @@ namespace BusinessLayer.Services
             {
 
                 throw;
+            }
+        }
+
+        // Delete Label
+        public async Task DeleteLabel(int LabelId, int userId)
+        {
+            try
+            {
+                await this.LabelRL.DeleteLabel(LabelId, userId);
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
     }

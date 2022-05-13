@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace FundooNotes.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class LabelController : ControllerBase
     {
         FundoosContext fundoosContext;
@@ -18,6 +20,7 @@ namespace FundooNotes.Controllers
             this.fundoosContext = fundooContext;
         }
 
+        // Add label
 
         [Authorize]
         [HttpPost("Addlabel/{NoteId}/{LabelName}")]
@@ -29,6 +32,25 @@ namespace FundooNotes.Controllers
                 int userId = Int32.Parse(userid.Value);
                 await this.labelBL.Addlabel(userId, NoteId, LabelName);
                 return this.Ok(new { success = true, message = $"Label added successfully" });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        // Delete Label
+
+        [Authorize]
+        [HttpPost("DeleteLabel/{LabelId}")]
+        public async Task<ActionResult> DeleteLabel(int LabelId)
+        {
+            try
+            {
+                var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userId", StringComparison.InvariantCultureIgnoreCase));
+                int userId = Int32.Parse(userid.Value);
+                await this.labelBL.DeleteLabel(LabelId, userId);
+                return this.Ok(new { success = true, message = $"Label Deleted successfully" });
             }
             catch (Exception e)
             {
