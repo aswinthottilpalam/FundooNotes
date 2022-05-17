@@ -24,10 +24,11 @@ namespace RepositoryLayer.Entities
         public DateTime RemainderDate { get; set; }
 
         public int UserId { get; set; }
+
         public virtual User user { get; set; }
         // User is entity class name in db set
 
-        public virtual IList<Label> Label { get; set; }
+        //public virtual IList<Label> Label { get; set; }
 
     }
 }

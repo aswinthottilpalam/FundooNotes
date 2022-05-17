@@ -156,5 +156,17 @@ namespace BusinessLayer.Services
                 throw;
             }
         }
+
+        Task<List<Note>> INoteBL.GetAllNoteRedis(int userId)
+        {
+            try
+            {
+                return this.noteRL.GetAllNoteRedis(userId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

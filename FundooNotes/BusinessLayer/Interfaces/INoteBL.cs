@@ -19,6 +19,8 @@ namespace BusinessLayer.Interfaces
         Task Remainder(int userId, int noteId, DateTime RemainderDate);
         Task<Note> TrashNote(int noteId, int userId);
         Task<List<Note>> GetAllNote(int userId);
+        Task<List<Note>> GetAllNoteRedis(int userId);
+
 
     }
 }

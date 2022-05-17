@@ -224,7 +224,7 @@ namespace RepositoryLayer.Services
         {
             try
             {
-                return await fundoosContext.Notes.Where(u => u.UserId == userId).Include(u => u.user).Include(l => l.Label).ToListAsync();
+                return await fundoosContext.Notes.Where(u => u.UserId == userId).Include(u => u.user).ToListAsync();
             }
             catch (Exception e)
             {
@@ -251,6 +251,18 @@ namespace RepositoryLayer.Services
             {
 
                 throw e;
+            }
+        }
+
+        async Task<List<Note>> INoteRL.GetAllNoteRedis(int userId)
+        {
+            try
+            {
+                return await fundoosContext.Notes.Where(u => u.UserId == userId).Include(u => u.user).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

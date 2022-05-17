@@ -27,6 +27,7 @@ namespace RepositoryLayer.Interfaces
         Task Remainder(int userId, int noteId, DateTime RemainderDate);
 
         Task<List<Note>> GetAllNote(int userId);
+        Task<List<Note>> GetAllNoteRedis(int userId);
 
 
     }
