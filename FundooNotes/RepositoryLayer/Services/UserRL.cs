@@ -97,7 +97,7 @@ namespace RepositoryLayer.Services
                     new Claim("email", email),
                     new Claim("userID",UserId.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddMinutes(120),
 
                 SigningCredentials =
                 new SigningCredentials(

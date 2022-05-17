@@ -298,6 +298,42 @@ namespace FundooNotes.Controllers
         //    }
         //}
 
+        [Authorize]
+        [HttpGet("GetAllNotesRedis")]
+        public async Task<ActionResult> GetAllNoteRedis()
+        {
+            try
+            {
+                string serializeNoteList;
+                string key = "Aswin";
+                var noteList = new List<Note>();
+                var redisNoteList = await distributedCache.GetAsync(key);
+                if (redisNoteList != null)
+                {
+                    serializeNoteList = Encoding.UTF8.GetString(redisNoteList);
+                    noteList = JsonConvert.DeserializeObject<List<Note>>(serializeNoteList);
+                }
+                else
+                {
+                    var userid = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userID", StringComparison.InvariantCultureIgnoreCase));
+                    int userId = Int32.Parse(userid.Value);
+                    noteList = await this.noteBL.GetAllNote(userId);
+                    serializeNoteList = JsonConvert.SerializeObject(noteList);
+                    redisNoteList = Encoding.UTF8.GetBytes(serializeNoteList);
+                    var option = new DistributedCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(20)).SetAbsoluteExpiration(TimeSpan.FromHours(6));
+
+                    await distributedCache.SetAsync(key, redisNoteList, option);
+
+
+                }
+                return this.Ok(new { success = true, message = "Get note successful!!!", data = noteList });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
 
     }
